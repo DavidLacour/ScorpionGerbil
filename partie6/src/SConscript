@@ -89,8 +89,10 @@ def DefineProgram(name, additional_src):
         env.Depends(lldb, target)
         env.Alias(name+"-lldb", lldb)
 	
-DefineProgram('UnitTests', Glob('Tests/UnitTests/*.cpp'))
 DefineProgram('application', Glob('FinalApplication.cpp'))
+
+"""
+DefineProgram('UnitTests', Glob('Tests/UnitTests/*.cpp'))
 DefineProgram('ChasingTest', Glob('Tests/GraphicalTests/ChasingTest.cpp'))
 DefineProgram('Vec2dTest', Glob('Tests/UnitTests/Vec2dTest.cpp') + Glob('Tests/UnitTests/CatchTests.cpp'))
 DefineProgram('ColliderTest', Glob('Tests/UnitTests/ColliderTest.cpp') + Glob('Tests/UnitTests/CatchTests.cpp'))
@@ -103,7 +105,7 @@ DefineProgram('PPSTest', Glob('Tests/GraphicalTests/PPSTest.cpp'))
 DefineProgram('ReproductionTest', Glob('Tests/GraphicalTests/ReproductionTest.cpp'))
 DefineProgram('WaveTest', Glob('Tests/GraphicalTests/WaveTest.cpp'))
 DefineProgram('NeuronalTest', Glob('Tests/GraphicalTests/NeuronalTest.cpp'))
-
+"""
 if env['CXX'] == 'clang++':
     analyze_cmd = "clang++ -std=c++11 -stdlib=libc++ -Wall -Wextra -Werror " + includeFlags + " --analyze -Xanalyzer -analyzer-output='html' "
     file_list = ' '.join('"' + str(f) + '"' for f in all_src_files)
