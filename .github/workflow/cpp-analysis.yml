@@ -1,0 +1,22 @@
+name: C++ Code Analysis
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  cppcheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install cppcheck
+      run: sudo apt-get install -y cppcheck
+    - name: Run cppcheck
+      run: cppcheck --enable=all --std=c++11 --language=c++ --output-file=cppcheck_report.txt .
+    - name: Upload report
+      uses: actions/upload-artifact@v3
+      with:
+        name: cppcheck-report
+        path: cppcheck_report.txt
