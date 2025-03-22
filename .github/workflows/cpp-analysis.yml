@@ -1,22 +1,43 @@
-name: C++ Code Analysis
+name: Multiple SCons Builds and Analysis
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
-  cppcheck:
+  analyze:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Install cppcheck
-      run: sudo apt-get install -y cppcheck
-    - name: Run cppcheck
-      run: cppcheck --enable=all --std=c++11 --language=c++ --output-file=cppcheck_report.txt .
-    - name: Upload report
+    
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y scons cppcheck
+    
+    # First project build and analysis
+    - name: Build project 1
+      run: |
+        cd normal
+        scons
+    
+    - name: Analyze project 1
+      run: |
+        cd project1
+        cppcheck --enable=all --std=c++11 --output-file=project1_report.txt .
+    
+    # Second project build and analysis
+    - name: Build project 2
+      run: |
+        cd evolution
+        scons
+    
+    - name: Analyze project 2
+      run: |
+        cd project2
+        cppcheck --enable=all --std=c++11 --output-file=project2_report.txt .
+    
+    # Upload all reports
+    - name: Upload analysis reports
       uses: actions/upload-artifact@v3
       with:
-        name: cppcheck-report
-        path: cppcheck_report.txt
+        name: cppcheck-reports
+        path: |
+          project1/project1_report.txt
+          project2/project2_report.txt
