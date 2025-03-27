@@ -18,13 +18,6 @@ class NeuronalScorpion : public Scorpion
         MOVING, // il ne voit pas encore la proie mais l'a perçue au travers d'ondes émises (et s'oriente alors en conséquence).
     };
 public:
-    ~NeuronalScorpion()
-    {
-        for (auto sen : neuronal_scorpion_vector_sensors_) {
-            delete sen;
-        }
-    }
-
 
     /*!
     * @brief create a NeuronalScorpion
@@ -161,7 +154,7 @@ protected:
     void drawText( sf::RenderTarget&  ) const override;
 private:
 
-    std::vector<Sensor*>neuronal_scorpion_vector_sensors_;
+    std::vector<Sensor> neuronal_scorpion_vector_sensors_;
     // Vec2d neuronal_vec2d_target_estimation_;
     sf::Time neuronal_scorpion_time_idle_;
     sf::Time neuronal_scorpion_time_moving_;

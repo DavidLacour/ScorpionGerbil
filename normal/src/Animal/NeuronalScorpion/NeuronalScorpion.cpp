@@ -154,14 +154,10 @@ void NeuronalScorpion::UpdateState(sf::Time dt)
 void NeuronalScorpion::neuronalUpdateSensors(sf::Time dt)
 {
     neuronalScorpionSetPositionOfSensors();
-    for (auto sen : neuronal_scorpion_vector_sensors_) {
-        sen->update(dt);
+    for (auto& sen : neuronal_scorpion_vector_sensors_) {
+        sen.update(dt);
     }
-
-
 }
-
-// {18, 54, 90, 140, -140, -90, -54, -18}
 
 
 
@@ -176,65 +172,70 @@ Vec2d NeuronalScorpion::neuronalScorpionRotateVec2dAngle(const Vec2d& vecteur, c
 
 void NeuronalScorpion::neuronalScorpionAddSensors()
 {
-    std::vector<double > listeAngles{18, 54, 90, 140, -140, -90, -54, -18};
+    std::vector<double> listeAngles{18, 54, 90, 140, -140, -90, -54, -18};
     size_t index(0);
-    for (auto& angle : listeAngles	) {
-        neuronal_scorpion_vector_sensors_.push_back(new Sensor(getPosition()+getAppConfig().scorpion_sensor_radius*neuronalScorpionRotateVec2dAngle(getDirection(),angle*DEG_TO_RAD),this,index));
-        index +=1;
-
+    for (auto& angle : listeAngles) {
+        neuronal_scorpion_vector_sensors_.emplace_back(
+            getPosition() + getAppConfig().scorpion_sensor_radius * 
+            neuronalScorpionRotateVec2dAngle(getDirection(), angle * DEG_TO_RAD),
+            this, index
+        );
+        index += 1;
     }
-
 }
 
-void NeuronalScorpion::neuronalScorpionInhibitSensorIndexScore(const size_t& i, const double& score )
+void NeuronalScorpion::neuronalScorpionInhibitSensorIndexScore(const size_t& i, const double& score)
 {
-    neuronal_scorpion_vector_sensors_[i]->sensorInhibitedByScore(score);
+    neuronal_scorpion_vector_sensors_[i].sensorInhibitedByScore(score);
 }
+
+
 
 Vec2d NeuronalScorpion::neuronalScorpionGetPositionOfSensor(const size_t& i)
 {
-    return neuronal_scorpion_vector_sensors_[i]->getPosition();
+    return neuronal_scorpion_vector_sensors_[i].getPosition();
 }
 
 
 Vec2d NeuronalScorpion::neuronalScorpionEstimateTarget()
 {
-    Vec2d res(0.0,0.0);
-    for (auto sen : neuronal_scorpion_vector_sensors_) {
-        res += (sen->getPosition()-getPosition())*sen->sensorGetScore();
+    Vec2d res(0.0, 0.0);
+    for (auto& sen : neuronal_scorpion_vector_sensors_) {
+        res += (sen.getPosition() - getPosition()) * sen.sensorGetScore();
     }
     return res;
-
 }
 
 void NeuronalScorpion::neuronalScorpionSetPositionOfSensors()
 {
-    std::vector<double > listeAngles{18, 54, 90, 140, -140, -90, -54, -18};
-    for ( size_t i(0); i<listeAngles.size() ; ++i) {
-        neuronal_scorpion_vector_sensors_[i]->sensorSetPosition(getPosition()+getAppConfig().scorpion_sensor_radius*neuronalScorpionRotateVec2dAngle(getDirection(),listeAngles[i]*DEG_TO_RAD));
-
+    std::vector<double> listeAngles{18, 54, 90, 140, -140, -90, -54, -18};
+    for (size_t i(0); i < listeAngles.size(); ++i) {
+        neuronal_scorpion_vector_sensors_[i].sensorSetPosition(
+            getPosition() + getAppConfig().scorpion_sensor_radius * 
+            neuronalScorpionRotateVec2dAngle(getDirection(), listeAngles[i] * DEG_TO_RAD)
+        );
     }
+}
 
-};
+
 bool NeuronalScorpion::neuronalScorpionOneSensorActif()
 {
-    for (auto sen : neuronal_scorpion_vector_sensors_) {
-        if( sen->sensorGetActif()) return true;
+    for (auto& sen : neuronal_scorpion_vector_sensors_) {
+        if (sen.sensorGetActif()) return true;
     }
     return false;
-};
+}
 
 void NeuronalScorpion::draw(sf::RenderTarget& target) const
 {
     Animal::draw(target);
-    if(isDebugOn()) {
-        for (auto sen: neuronal_scorpion_vector_sensors_) {
-            sen->draw(target);
-
-            // target.draw(buildCircle(neuronal_scorpion_target_+getPosition(), getRadius(), sf::Color(0, 175, 175)));
+    if (isDebugOn()) {
+        for (const auto& sen : neuronal_scorpion_vector_sensors_) {
+            sen.draw(target);
         }
     }
 }
+
 std::string NeuronalScorpion::stringEtat() const
 {
     std::string humeurString;
@@ -258,10 +259,11 @@ std::string NeuronalScorpion::stringEtat() const
     return humeurString;
 }
 
+
 void NeuronalScorpion::neuronalScorpionSensorsReset()
 {
-    for  (auto sen: neuronal_scorpion_vector_sensors_) {
-        sen->sensorReset();
+    for (auto& sen : neuronal_scorpion_vector_sensors_) {
+        sen.sensorReset();
     }
 }
 void NeuronalScorpion::drawText( sf::RenderTarget& target  ) const
