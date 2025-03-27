@@ -5,9 +5,6 @@
 #include "Sensor.hpp"
 #include <vector>
 
-// WaveTest-run --cfg=appTest.json
-// application-run --cfg=appTest.json
-
 class Sensor;
 
 NeuronalScorpion::NeuronalScorpion(const Vec2d& position, const double& energie,
@@ -26,21 +23,19 @@ NeuronalScorpion::NeuronalScorpion(const Vec2d& position, const double& energie,
 NeuronalScorpion::NeuronalScorpion(const Vec2d& position) : Scorpion(position)
     ,neuronal_scorpion_time_idle_(sf::seconds(getAppConfig().neuronalscorpion_idlemax))
     ,neuronal_scorpion_time_moving_(sf::seconds(getAppConfig().neuronalscorpion_movingmax))
-    //         ,neuronal_scorpion_time_moving_(sf::seconds(50))
     ,neuronal_scorpion_time_reception_(sf::seconds(getAppConfig().sensor_activation_duration))
     ,neuronal_scorpion_clock_etat_((sf::Time::Zero))
     ,neuronal_scorpion_clock_sensors_(sf::Time::Zero)
     ,neuronal_scorpion_neuronal_etat_(WANDERING)
     ,neuronal_scorpion_target_(1,0)
 {
-
     neuronalScorpionAddSensors();
 }
+
 NeuronalScorpion::NeuronalScorpion(const Vec2d& position, const double& energie,
                                    const bool& femelleOuPas, const sf::Time& ageLimit= sf::Time(getAppConfig().scorpion_longevity)) : Scorpion(position, energie, femelleOuPas, ageLimit)
     ,neuronal_scorpion_time_idle_(sf::seconds(getAppConfig().neuronalscorpion_idlemax))
     ,neuronal_scorpion_time_moving_(sf::seconds(getAppConfig().neuronalscorpion_movingmax))
-    //     ,neuronal_scorpion_time_moving_(sf::seconds(10))
     ,neuronal_scorpion_time_reception_(sf::seconds(getAppConfig().sensor_activation_duration))
     ,neuronal_scorpion_clock_etat_((sf::Time::Zero))
     ,neuronal_scorpion_clock_sensors_(sf::Time::Zero)
@@ -50,36 +45,16 @@ NeuronalScorpion::NeuronalScorpion(const Vec2d& position, const double& energie,
     neuronalScorpionAddSensors();
 }
 
-/*!
-* @brief Ici, le Scorpion est inactif (IDLE) pendant le temps nécessaire à l'activation correct des senseurs lorsqu'un senseur est activé,
-* ensuite il passe en moving pendant un certain temps puis en wandering.
-* L'état TARGET_IN_SIGHT prime sur le reste si une cible est en vue.
-*
-*  L'horloge des senseurs est gérée ici.
-*/
-void NeuronalScorpion::update(sf::Time dt )
+void NeuronalScorpion::update(sf::Time dt)
 {
     neuronalUpdateSensors(dt);
     analyzeEnvironment();
 
-    /*
-    organic_entity_FOODs_.clear();
-    organic_entity_FOODs_ = mangeable(enVue());
-
-
-    if ( !organic_entity_FOODs_.empty()) {
-        neuronal_scorpion_neuronal_etat_ = TARGET_IN_SIGHT;
-        neuronal_scorpion_target_ = plusProche(organic_entity_FOODs_)->getPosition();
-    }
-    */ //  if organic_entity_FOODs_ protected
-    if ( getMangeablePlusProche() != nullptr) {
+    if (getMangeablePlusProche() != nullptr) {
         neuronal_scorpion_neuronal_etat_ = TARGET_IN_SIGHT;
         neuronal_scorpion_target_ = getMangeablePlusProche()->getPosition();
     }
-
-    else  {
-
-
+    else {
         if (neuronal_scorpion_neuronal_etat_ != MOVING) {
             if(neuronalScorpionOneSensorActif()) {
                 neuronal_scorpion_clock_sensors_ += dt;
@@ -101,54 +76,31 @@ void NeuronalScorpion::update(sf::Time dt )
     case IDLE:
         break;
     case MOVING:
-        // moveToVec2dForce(dt,force(neuronal_scorpion_target_));
         moveToVec2dForce(dt,neuronal_scorpion_target_);
         break;
     case TARGET_IN_SIGHT:
-        //	moveToVec2dForce(dt,force())
         moveToVec2dForce(dt,force(neuronal_scorpion_target_));
-        //	moveToVec2dForce(dt,neuronal_scorpion_target_);
-
         break;
-
     }
-    //	cout << neuronal_scorpion_target_.x << "   " << neuronal_scorpion_target_.y << endl;
-    //	moveToVec2dForce(dt,force(neuronal_scorpion_target_+getPosition()));
-
 }
-/*!
-* @brief L'horloge moving est géré ici. L'horloge d'activation des senseurs est gérée dans update.
-* 		Les Senseurs sont déplacés et mis à jours.
-*/
+
 void NeuronalScorpion::UpdateState(sf::Time dt)
 {
-    switch( neuronal_scorpion_neuronal_etat_) {
-    case IDLE :
-        /*
-        	neuronal_scorpion_clock_etat_ += dt;
-            if (neuronal_scorpion_clock_etat_ >= neuronal_scorpion_time_idle_)
-            {neuronal_scorpion_neuronal_etat_= WANDERING;
-            neuronal_scorpion_clock_etat_ = sf::Time::Zero;}
-           */
+    switch(neuronal_scorpion_neuronal_etat_) {
+    case IDLE:
         break;
     case WANDERING:
-        //  neuronal_scorpion_clock_ += dt;
-        //   if (neuronal_scorpion_clock_ >= neuronal_scorpion_time_moving_) neuronal_scorpion_neuronal_etat_= IDLE;
-        // neuronal_scorpion_clock_ = sf::Time::Zero;
         break;
-    case MOVING :
+    case MOVING:
         neuronal_scorpion_clock_etat_ += dt;
         if (neuronal_scorpion_clock_etat_ >= neuronal_scorpion_time_moving_) {
             neuronal_scorpion_neuronal_etat_= WANDERING;
             neuronal_scorpion_clock_etat_ = sf::Time::Zero;
-            //    neuronalScorpionSensorsReset();
         }
         break;
     case TARGET_IN_SIGHT:
         break;
     }
-
-
 }
 
 void NeuronalScorpion::neuronalUpdateSensors(sf::Time dt)
@@ -159,15 +111,9 @@ void NeuronalScorpion::neuronalUpdateSensors(sf::Time dt)
     }
 }
 
-
-
-// {18, 54, 90, 140, -140, -90, -54, -18} neuronal_scorpion_list_sensors_.push_back()
-
 Vec2d NeuronalScorpion::neuronalScorpionRotateVec2dAngle(const Vec2d& vecteur, const double& angle)
 {
-    return Vec2d ( cos(angle)*vecteur.x - sin(angle)*vecteur.y , sin(angle)*vecteur.x + cos(angle)*vecteur.y);
-
-
+    return Vec2d(cos(angle)*vecteur.x - sin(angle)*vecteur.y, sin(angle)*vecteur.x + cos(angle)*vecteur.y);
 }
 
 void NeuronalScorpion::neuronalScorpionAddSensors()
@@ -189,13 +135,10 @@ void NeuronalScorpion::neuronalScorpionInhibitSensorIndexScore(const size_t& i, 
     neuronal_scorpion_vector_sensors_[i].sensorInhibitedByScore(score);
 }
 
-
-
 Vec2d NeuronalScorpion::neuronalScorpionGetPositionOfSensor(const size_t& i)
 {
     return neuronal_scorpion_vector_sensors_[i].getPosition();
 }
-
 
 Vec2d NeuronalScorpion::neuronalScorpionEstimateTarget()
 {
@@ -216,7 +159,6 @@ void NeuronalScorpion::neuronalScorpionSetPositionOfSensors()
         );
     }
 }
-
 
 bool NeuronalScorpion::neuronalScorpionOneSensorActif()
 {
@@ -239,26 +181,22 @@ void NeuronalScorpion::draw(sf::RenderTarget& target) const
 std::string NeuronalScorpion::stringEtat() const
 {
     std::string humeurString;
-    switch ( neuronal_scorpion_neuronal_etat_)
-
-    {
-
-    case   WANDERING :
-        humeurString = " WANDERING";
+    switch (neuronal_scorpion_neuronal_etat_) {
+    case WANDERING:
+        humeurString = "WANDERING";
         break;
-    case IDLE :
-        humeurString = "IDLE" ;
+    case IDLE:
+        humeurString = "IDLE";
         break;
     case TARGET_IN_SIGHT:
         humeurString = "TARGET_IN_SIGHT";
         break;
     case MOVING:
         humeurString = "MOVING";
-        break ;
+        break;
     }
     return humeurString;
 }
-
 
 void NeuronalScorpion::neuronalScorpionSensorsReset()
 {
@@ -266,15 +204,15 @@ void NeuronalScorpion::neuronalScorpionSensorsReset()
         sen.sensorReset();
     }
 }
-void NeuronalScorpion::drawText( sf::RenderTarget& target  ) const
-{
-    auto text1 = buildText( NeuronalScorpion::stringEtat(),
-                            getPosition()+getDirection()*80 ,
-                            getAppFont(),
-                            getAppConfig().default_debug_text_size,
-                            sf::Color::Red,
-                            (getRotation()/DEG_TO_RAD+90)
-                          );
-    target.draw(text1);
 
+void NeuronalScorpion::drawText(sf::RenderTarget& target) const
+{
+    auto text1 = buildText(NeuronalScorpion::stringEtat(),
+                          getPosition()+getDirection()*80,
+                          getAppFont(),
+                          getAppConfig().default_debug_text_size,
+                          sf::Color::Red,
+                          (getRotation()/DEG_TO_RAD+90)
+                         );
+    target.draw(text1);
 }
