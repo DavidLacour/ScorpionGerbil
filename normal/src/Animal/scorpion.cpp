@@ -1,9 +1,6 @@
 #include "Scorpion.hpp"
 #include "../Application.hpp"
-//#include "../Utility/Utility.hpp"
-//#include "../Utility/Constants.hpp"
 #include "../Utility/Vec2d.hpp"
-//#include  <SFML/Graphics.hpp>
 #include "../Random/Uniform.hpp"
 Scorpion::Scorpion(const Vec2d& position, const double& energie,
                    const bool& femelleOuPas) :
@@ -12,10 +9,6 @@ Scorpion::Scorpion(const Vec2d& position, const double& energie,
 Scorpion::Scorpion(const Vec2d& position) : Animal(position,getAppConfig().scorpion_size,getAppConfig().scorpion_energy_initial,uniform(0, 1) == 0,getAppConfig().scorpion_longevity,
             getAppConfig().scorpion_energy_loss_factor,
             getAppConfig().scorpion_gestation_time)   {}
-
-
-
-
 
 Scorpion::Scorpion(const Vec2d& position, const double& energie,
                    const bool& femelleOuPas, const sf::Time& ageLimit= sf::Time(getAppConfig().scorpion_longevity)) :
@@ -35,7 +28,6 @@ const double& Scorpion::getMass() const
     return  getAppConfig().scorpion_mass;
 }
 
-
 const double& Scorpion::getViewRange() const
 {
     return getAppConfig().scorpion_view_range;
@@ -50,7 +42,6 @@ const double& Scorpion::getRandomWalkRadius() const
 {
     return getAppConfig().scorpion_random_walk_radius;
 }
-
 
 const double& Scorpion::getRandomWalkDistance() const
 {
@@ -68,7 +59,6 @@ const sf::Texture& Scorpion::getTexture() const
     return texture;
 
 };
-
 
 bool Scorpion::eatable(OrganicEntity const* entity   ) const
 {
@@ -89,14 +79,11 @@ bool Scorpion::eatableBy(Scorpion const*  ) const
     return false;
 }
 
-
-
 bool Scorpion::matable(OrganicEntity const* entity   ) const
 {
 
     return entity->canMate(this);
 }
-
 
 bool Scorpion::canMate(Gerbil const* ) const
 {
@@ -123,17 +110,6 @@ bool Scorpion::canMate(Scorpion const* S ) const
     }
     return false;
 }
-
-/* // not ready
-void Scorpion::giveBirthThis()
-{
-
-    for( int i(0); i <= getBabies(); ++ i) {
-        getAppEnv().addEntity(new Scorpion(getPosition()-getDirection()*getRadius()*1.2, getDirection()));
-    }
-    setBabies(0);
-}
-	*/
 
 void Scorpion::giveBirthThis()
 {

@@ -4,36 +4,24 @@
 #include "Environment.hpp"
 #include "../Application.hpp"
 #include "../Utility/Utility.hpp"
-//#include <memory>
 #include <algorithm>
-//#include "../Obstacle/CircularCollider.hpp"
-//#include "OrganicEntity.hpp"
-//#include "FoodGenerator.hpp"
-//#include "../Animal/Animal.hpp"
 #include "../Animal/NeuronalScorpion/Sensor.hpp"
 #include <map>
 #include <string>
 void Environment::addEntity(OrganicEntity* organicEntity)
 {
-
     if(organicEntity != NULL) {
 
         organic_entity_.push_back(organicEntity);
     }
-
-
 }
 
 void Environment::addWave(Wave* wa)
 {
-
     if(wa!= NULL) {
-
         env_list_waves_.push_back(wa);
     }
 }
-
-
 
 void Environment::addGenerator(FoodGenerator* foodGenerator)
 {
@@ -55,10 +43,8 @@ void Environment::addObstacle(CircularCollider* roc)
     }
 }
 
-
 void Environment::update(sf::Time dt)
 {
-
     for( auto FG : food_generator_) {
         FG->update(dt);
     }
@@ -78,9 +64,7 @@ void Environment::update(sf::Time dt)
         }
     }
 
-
-
-    for (auto& OE : organic_entity_) { // utilise l'atribut list à tuer et une boucle while pour suprimer les vecteus sans faire de for auto delete puis remove pour enlever les nullptr la liste principale.
+    for (auto& OE : organic_entity_) { 
         if(OE != nullptr ) {
             if ( (OE->getAge() >= OE->getAgeLimit()) or  (OE->getEnergie() <= getAppConfig().animal_min_energy)) {
                 listTuer_.push_back(OE);
@@ -104,10 +88,8 @@ void Environment::update(sf::Time dt)
             }
         }
     }
-
     env_list_waves_.erase(std::remove(env_list_waves_.begin(), env_list_waves_.end(), nullptr), env_list_waves_.end());
 }
-
 
 std::list<OrganicEntity*> Environment::getEntitiesInSightForAnimal(Animal* animal) const
 {
@@ -128,14 +110,9 @@ std::list<OrganicEntity*> Environment::getEntitiesInSightForAnimal(Animal* anima
 
 }
 
-
-
 void Environment::draw(sf::RenderTarget& targetWindow)
 {
     for (auto organic_entity: organic_entity_) {
-
-
-
         organic_entity->draw(targetWindow);
     }
     for (auto wav : env_list_waves_) {
@@ -148,7 +125,6 @@ void Environment::draw(sf::RenderTarget& targetWindow)
     for (auto roc: env_list_obstacles_) {
         roc->draw(targetWindow);
     }
-
     if (isDebugOn()) {
         double worldSize = getAppConfig().simulation_world_size;
         Vec2d pos;
@@ -177,12 +153,7 @@ void Environment::draw(sf::RenderTarget& targetWindow)
                               );
         targetWindow.draw(text2);
     }
-
-
 }
-
-
-
 
 void Environment::clean()
 {
@@ -194,7 +165,7 @@ void Environment::clean()
     }
     organic_entity_.clear();
     food_generator_.clear();
-} // Laver l'environnement: suprimer ce qui est pointé et vidé les listes.
+}
 
 std::list<CircularCollider*> Environment::getIsColliding(CircularCollider* CC)
 {
@@ -219,16 +190,6 @@ double  Environment::envSensorActivationIntensityCumulated(Sensor* sen)
     }
     return cumulatedIntensity;
 }
-/*
-template<typenameType>
-int compter ( type ){
-	int i(0);
-for (auto elem : type ){
-	++ i;
-}
-return i;
-}
-* */
 
 unsigned int Environment::compterGerbil() const
 {
@@ -256,7 +217,6 @@ unsigned int Environment::compterFood() const
     return i ;
 }
 
-
 std::unordered_map<std::string,double> Environment::fetchData(std:: string const& yo) const
 {
     std::unordered_map<std::string,double> carte;
@@ -268,17 +228,8 @@ std::unordered_map<std::string,double> Environment::fetchData(std:: string const
         carte[s::FOOD] = double(compterFood());
 
     } else if (yo == s::WAVES) {
-        /*
-        double i(0) ;
-        for (auto elem: env_list_waves_){
-        	++i;
-        }
-        */
         carte[s::WAVES]= env_list_waves_.size();
-
-
     }
-
     return carte;
 
 }
@@ -290,34 +241,4 @@ void Environment::popGenerator()
     }
 }
 
-
-/*
-std::unordered_map<std::string,double> Environment::fetchData(std:: string const& yo) const{
-	std::unordered_map<std::string,double> carte;
-	std::cout <<  " aehqahbLFHBkzivbfwdzvfO" << std::endl;
-	if (!organic_entity_.empty()){
-	if (yo == s::GERBILS){
-
-		carte[s::GERBILS] = compterGerbil();
-
-} else if (yo == s::SCORPIONS ){
-			carte[s::SCORPIONS] = double(compterScorpion());
-		} else if (yo == s::FOOD){
-			carte[s::FOOD] = double(compterFood());
-
-	}
-
-	return carte;
-}
-
- 	carte[s::SCORPIONS] = 0.0;
- carte[s::GERBILS] = 0.0;
- carte [s::FOOD] = 0.0 ;
-
-
-
- 	std::cout << "BLABLABLA" << std::endl;
-return carte;
-
-}*/
 
