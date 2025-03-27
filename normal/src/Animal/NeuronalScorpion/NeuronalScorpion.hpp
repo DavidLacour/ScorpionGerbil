@@ -6,16 +6,13 @@
 #include <cmath>
 #include <vector>
 
-// Les fonctions ne respectent pas toujours l'énoncé. J'ai directement fait des soustractions et additions vectoriels plutot que d'utiliser les angles pour régler la position des angles et estimmer la position de la cible.
-
 class NeuronalScorpion : public Scorpion
 {
     enum NeuronalEtat {
-
-        IDLE, // au repos (dans cet état il est réceptif aux ondes éventuellement émises par les gerbilles);
-        WANDERING, // déambulant au hasard;
-        TARGET_IN_SIGHT,  // un proie est entrée dans son champs de vision;
-        MOVING, // il ne voit pas encore la proie mais l'a perçue au travers d'ondes émises (et s'oriente alors en conséquence).
+        IDLE,       // at rest (in this state it is receptive to waves potentially emitted by gerbils)
+        WANDERING,  // wandering randomly
+        TARGET_IN_SIGHT, // a prey has entered its field of vision
+        MOVING,     // it doesn't yet see the prey but has detected it through emitted waves (and orients itself accordingly)
     };
 public:
 
@@ -162,10 +159,7 @@ private:
     sf::Time neuronal_scorpion_time_reception_;
     sf::Time neuronal_scorpion_clock_etat_;
     sf::Time neuronal_scorpion_clock_sensors_;
-    NeuronalEtat neuronal_scorpion_neuronal_etat_; // J'aurais du masquer l'état ou aggrandir l'état dans l'animal...
+    NeuronalEtat neuronal_scorpion_neuronal_etat_;
     Vec2d neuronal_scorpion_target_;
 };
 
-
-
-//  {18, 54, 90, 140, -140, -90, -54, -18}

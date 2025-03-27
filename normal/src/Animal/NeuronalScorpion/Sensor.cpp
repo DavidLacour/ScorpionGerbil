@@ -1,15 +1,7 @@
-
-
 #include "Sensor.hpp"
 #include "../../Application.hpp"
 #include "NeuronalScorpion.hpp"
 #include "../../Utility/Utility.hpp"
-
-
-
-
-
-
 
 
 class NeuronalScorpion;
@@ -124,32 +116,3 @@ void Sensor::draw(sf::RenderTarget& target) const
     }
     target.draw(buildCircle(getPosition(), sensor_neuronal_scorpion_->getRadius()/4, color));
 }
-/*
-    en magenta si le senseur est actif et a un degré d'inhibition supérieur à 0.2;
-    en bleu s'il est inactif et a un degré d'inhibition supérieur à 0.2;
-    en rouge s'il a un degré d'inhibition inférieur à 0.2 et est actif
-    en vert autrement
-*/
-
-
-/*
- * Indication : location appartient à un arc donné, si l'angle (location - origin).angle(), où origin est l'origine de l'onde,
- * est contenu dans l'arc (supérieur ou égal au début de l'arc et inférieur ou égal à sa fin).
- *  Pensez à modulariser vos traitements compte tenu de ce que vous avez déjà eu à coder précédemment.
- *
- *
- * /
-*/
-/*
-bool Animal::isTargetInSight(const Vec2d& cible) const
-{
-
-
-    if(isEqual(distanceTo(cible),0 )) return false; // should not target himself
-    if ( (cible-getPosition()).lengthSquared() <= (getViewDistance()*getViewDistance())) {
-        if(direction_.dot((cible-getPosition()).normalised()) >= cos((getViewRange()+0.001)/2)) {
-            return true;
-        }
-
-    }
-    */
