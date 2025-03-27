@@ -19,15 +19,10 @@ Wave::Wave( const Vec2d& position, const double& wave_energy, const double& wave
     wave_energy_current_(wave_energy),
     wave_intensity_(wave_energy),
     wave_clock_(sf::Time::Zero)
-    //  wave_margin_()
-//  ,wave_list_pair_angles_(list.empty())
 {
     std::pair< double,double> pair1(-PI,PI);
     wave_list_pair_angles_.push_front(pair1);
 }
-
-
-
 
 void Wave::update(sf::Time dt)
 {
@@ -49,13 +44,9 @@ void Wave::draw(sf::RenderTarget&  target) const
                     getRadius(), getPosition() ,
                     color, 0.0,
                     getAppConfig().wave_intensity_thickness_ratio*wave_intensity_
-                    //   36
                 ));
         target.draw(arc);
-
     }
-
-
 }
 void Wave::waveUpdateClock(sf::Time dt)
 {
@@ -81,32 +72,14 @@ void Wave::waveUpdateListPairAngles()
 {
 
     list<CircularCollider*> liste(getAppEnv().getIsColliding(this));
-
-    //list<pairdouble> listePairDouble;
     for (auto& arc : wave_list_pair_angles_ ) {
         for (auto& obstacle : liste ) {
             if ( ((obstacle->getPosition() - this->getPosition()).angle() >= arc.first ) and ((obstacle->getPosition() - this->getPosition()).angle() <= arc.second  )) {
-
                 wave_list_pair_angles_.push_back(pairdouble((obstacle->getPosition() - this->getPosition()).angle()+std::atan2(obstacle->getRadius(),obstacle->getRadius()+this->getRadius()),arc.second));
-                //listePairDouble
                 arc.second=((obstacle->getPosition() - this->getPosition()).angle()-std::atan2(obstacle->getRadius(),obstacle->getRadius()+this->getRadius()));
-
-
-
-
             }
         }
     }
-    // call getAppEnv().getIsColliding to know which object is colliding
-    // loop on arcs wave_list_pair_angles_
-    // loop on colliding objects
-    // if an object collides an arc is cuted and a new one shorter is added
-
-    /*
-    for(auto pd : listePairDouble){
-    	wave_list_pair_angles_.push_back(pd);
-    }
-    */
     liste.clear();
 }
 double Wave::waveGetWaveEnergy()
@@ -140,8 +113,3 @@ bool Wave::waveIsPointTouching(const Vec2d& point)
     }
     return false ;
 }
-
-// getAppConfig().wave_on_wave_marging
-
-
-
