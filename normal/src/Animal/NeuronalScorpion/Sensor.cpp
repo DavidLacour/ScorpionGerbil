@@ -17,14 +17,12 @@ Sensor::Sensor(const Vec2d& position, NeuronalScorpion* neuronalScorpion, const 
     ,sensor_inhibitor_factor_(getAppConfig().sensor_inhibition_factor)
 {}
 
-
 void Sensor::update(sf::Time dt)
 {
     sensorActivation();
     sensorUpdateScore();
     sensorInhibit();
 }
-
 
 Vec2d Sensor::getPosition() const
 {
@@ -39,7 +37,6 @@ void Sensor::sensorTemper()
 
 void Sensor::sensorActivation()
 {
-    // if (wav->waveIsPointTouching(getPositionOfSensor())){
     if (sensor_etat_==false) {
         if 	( getAppEnv().envSensorActivationIntensityCumulated(this) >= sensor_intensity_threshold_) {
             sensor_etat_ = true;
@@ -59,7 +56,6 @@ void Sensor::sensorUpdateScore()
     }
 }
 
-
 void Sensor::sensorInhibit()
 {
     if (sensor_etat_==true) {
@@ -67,11 +63,8 @@ void Sensor::sensorInhibit()
             sensor_neuronal_scorpion_->neuronalScorpionInhibitSensorIndexScore((sensor_index_ + i) % 8, sensor_score_);
         }
     }
-    /* Supposons que les senseurs soient numérotés de 0 à 7, chaque senseur i va inhiber les 3 senseurs (index + i) % 8 où index varie dans l'ensemble {3,4,5}
-    */
-
-
 }
+
 void Sensor::sensorInhibitedByScore(const double& score)
 {
     sensor_inhibitor_ += score*sensor_inhibitor_factor_;

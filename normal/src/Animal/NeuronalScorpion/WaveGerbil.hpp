@@ -1,67 +1,78 @@
 #pragma once
 #include "../Gerbil.hpp"
 #include "../../Application.hpp"
+
+/**
+ * @class WaveGerbil
+ * @brief A specialized Gerbil that can emit waves into the environment
+ * 
+ * The WaveGerbil extends the basic Gerbil class by adding the ability to
+ * periodically emit waves that propagate through the environment. These waves
+ * can be detected by other entities like NeuronalScorpion.
+ */
 class WaveGerbil : public Gerbil
 {
 public:
+    /**
+     * @brief Destructor for WaveGerbil
+     */
     ~WaveGerbil() {}
 
-    /*!
-    * @brief create an WaveGerbil
-    *
-    * @param Position
+    /**
+     * @brief Constructs a WaveGerbil at the specified position
+     * 
+     * @param position The initial position of the WaveGerbil
+     */
+    WaveGerbil(const Vec2d& position);
 
-    * @return an WaveGerbil
-    */
-    WaveGerbil(const Vec2d&);
+    /**
+     * @brief Constructs a WaveGerbil with specified position, energy, and gender
+     * 
+     * @param position The initial position of the WaveGerbil
+     * @param energy The initial energy level
+     * @param isFemale Gender flag (true for female, false for male)
+     */
+    WaveGerbil(const Vec2d& position, const double& energy, const bool& isFemale);
 
-    /*!
-    * @brief create a WaveGerbil
-    *
-    * @param Position
-    * @param size
-    * @param energie
-    *
-    * @return an WaveGerbil
-    */
-    WaveGerbil(const Vec2d&, const double& , const bool& );
+    /**
+     * @brief Constructs a WaveGerbil with specified position, energy, gender, and age limit
+     * 
+     * @param position The initial position of the WaveGerbil
+     * @param energy The initial energy level
+     * @param isFemale Gender flag (true for female, false for male)
+     * @param ageLimit Maximum age the WaveGerbil can reach
+     */
+    WaveGerbil(const Vec2d& position, const double& energy, const bool& isFemale, const sf::Time& ageLimit);
 
-    /*!
-    * @brief create a WaveGerbil
-    *
-    * @param Position
-    *
-    * @return an WaveGerbil
-    */
-    WaveGerbil(const Vec2d&, const double& , const bool&, const sf::Time& );
+    /**
+     * @brief Constructs a baby WaveGerbil with a parent
+     * 
+     * @param position The initial position of the baby WaveGerbil
+     * @param direction The initial direction the baby is facing
+     * @param parent Pointer to the parent OrganicEntity
+     */
+    WaveGerbil(const Vec2d& position, const Vec2d& direction, OrganicEntity* parent);
 
-
-
-    /*!
-    * @brief create a WaveBaby Gerbil
-    *
-    * @param Position
-    * @param direction mum
-    * @param pointer on mum
-    *
-    * @return an WaveBaby Gerbil
-    */
-    WaveGerbil(const Vec2d& ,const Vec2d&, OrganicEntity* ) ; // BABY and MUM
-
-
-    virtual void update(sf::Time ) override;
+    /**
+     * @brief Updates the WaveGerbil's state
+     * 
+     * Extends the base Gerbil update by adding wave emission behavior
+     * 
+     * @param dt Time elapsed since last update
+     */
+    virtual void update(sf::Time dt) override;
 
 protected:
-    /*!
-    * @brief make a wave
-    *
-    * @param time
-    */
-    void waveGerbilWaving(sf::Time );
+    /**
+     * @brief Handles the wave emission mechanism
+     * 
+     * Creates and emits waves at regular intervals based on the wave_gerbil_frequency_
+     * 
+     * @param dt Time elapsed since last update
+     */
+    void waveGerbilWaving(sf::Time dt);
 
 private:
-    sf::Time wave_gerbil_frequency_;
-    sf::Time wave_gerbil_clock_;
-
-
+    sf::Time wave_gerbil_frequency_; ///< The time interval between wave emissions
+    sf::Time wave_gerbil_clock_;     ///< Timer tracking time since last wave emission
 };
