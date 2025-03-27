@@ -1,40 +1,84 @@
-
+/**
+ * @class ChasingAutomaton
+ * @brief An entity that chases a target position using acceleration and forces
+ * 
+ * The ChasingAutomaton is a CircularCollider that implements steering behaviors
+ * to chase a designated target position. It uses physics-based movement with
+ * force calculations to determine acceleration and update its velocity and position.
+ */
 class ChasingAutomaton : public CircularCollider
 {
 public:
+    /**
+     * @brief Constructs a new ChasingAutomaton
+     * 
+     * @param position Initial position of the automaton
+     * @param vitesse Initial speed (default is 0)
+     */
     ChasingAutomaton(const Vec2d& position, double vitesse = 0)
-
-
-        : CircularCollider( position, CHASING_AUTOMATON_RADIUS), direction_(0,0), vitesse_(vitesse), cible_(1,0)
+        : CircularCollider(position, CHASING_AUTOMATON_RADIUS), direction_(0,0), vitesse_(vitesse), cible_(1,0)
     {
     }
+    
+    /**
+     * @brief Gets the maximum speed this automaton can reach
+     * 
+     * @return The maximum speed as a constant reference
+     */
     const double& getStandardMaxSpeed() const;
-    const double& getMass() const ;
+    
+    /**
+     * @brief Gets the mass of this automaton for force calculations
+     * 
+     * @return The mass as a constant reference
+     */
+    const double& getMass() const;
 
-    Vec2d force( const Vec2d&) const;
+    /**
+     * @brief Calculates the force needed to reach the target position
+     * 
+     * @param target The target position to move towards
+     * @return The force vector
+     */
+    Vec2d force(const Vec2d& target) const;
 
-    void setTargetPosition(const Vec2d&);
+    /**
+     * @brief Sets the target position for this automaton to chase
+     * 
+     * @param position The new target position
+     */
+    void setTargetPosition(const Vec2d& position);
 
-    Vec2d getSpeedVector() const ;
+    /**
+     * @brief Gets the current velocity vector
+     * 
+     * @return The speed vector (direction * speed magnitude)
+     */
+    Vec2d getSpeedVector() const;
 
-    void update(sf::Time );
+    /**
+     * @brief Updates the automaton's state
+     * 
+     * @param dt Time elapsed since last update
+     */
+    void update(sf::Time dt);
+    
+    /**
+     * @brief Draws the automaton and its target to the render target
+     * 
+     * @param targetWindow The window to draw to
+     */
     void draw(sf::RenderTarget& targetWindow);
-    void move(const double&);
-
-
-
-
-
-
+    
+    /**
+     * @brief Moves the automaton based on force and physics calculations
+     * 
+     * @param deltaT Time step for the movement calculation
+     */
+    void move(const double& deltaT);
 
 private:
-
-    Vec2d direction_;
-    double vitesse_;
-    Vec2d cible_;
-
-
-
+    Vec2d direction_; ///< Normalized direction vector
+    double vitesse_;  ///< Current speed magnitude
+    Vec2d cible_;     ///< Target position to chase
 };
-
-
