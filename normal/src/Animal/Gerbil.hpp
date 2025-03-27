@@ -1,95 +1,227 @@
 #pragma once
 #include "Animal.hpp"
 #include "../Utility/Vec2d.hpp"
-//#include  <SFML/Graphics.hpp>
 
 class Scorpion;
 class Food;
 
-
+/**
+ * @class Gerbil
+ * @brief A specific type of Animal that represents a gerbil in the simulation
+ * 
+ * The Gerbil class extends the Animal class and implements specific behaviors
+ * for gerbils, including movement characteristics, interaction with other entities,
+ * reproduction capabilities, and visual representation.
+ */
 class Gerbil : public Animal
 {
 
 public:
-    // constructeur:
+    /**
+     * @brief Constructs a Gerbil with specified position, energy, and gender
+     * 
+     * @param position Initial position of the gerbil
+     * @param energy Initial energy level
+     * @param isFemale Gender flag (true for female, false for male)
+     */
+    Gerbil(const Vec2d& position, const double& energy, const bool& isFemale);
+    
+    /**
+     * @brief Constructs a Gerbil at the specified position with random gender
+     * 
+     * @param position Initial position of the gerbil
+     */
+    Gerbil(const Vec2d& position);
+    
+    /**
+     * @brief Constructs a Gerbil with specified position, energy, gender, and age limit
+     * 
+     * @param position Initial position of the gerbil
+     * @param energy Initial energy level
+     * @param isFemale Gender flag (true for female, false for male)
+     * @param ageLimit Maximum age the gerbil can reach
+     */
+    Gerbil(const Vec2d& position, const double& energy, const bool& isFemale, const sf::Time& ageLimit);
 
-    Gerbil(const Vec2d&, const double& , const bool& );
-    /*!
-    * @brief create a Gerbil
-    *
-    * @param Position
-    * @param size
-    * @param energie
-    *
-    * @return an Gerbil
-    */
-    Gerbil(const Vec2d&);
-    /*!
-    * @brief create a Gerbil
-    *
-    * @param Position
-    *
-    * @return an Gerbil
-    */
+    /**
+     * @brief Constructs a baby Gerbil with specified position and direction
+     * 
+     * @param position Initial position of the baby gerbil
+     * @param direction Initial direction the baby is facing
+     */
+    Gerbil(const Vec2d& position, const Vec2d& direction);
+    
+    /**
+     * @brief Constructs a baby Gerbil with a parent
+     * 
+     * @param position Initial position of the baby gerbil
+     * @param direction Initial direction the baby is facing
+     * @param parent Pointer to the parent OrganicEntity
+     */
+    Gerbil(const Vec2d& position, const Vec2d& direction, OrganicEntity* parent);
 
-    Gerbil(const Vec2d&, const double& , const bool&, const sf::Time& );
-    /*!
-    * @brief create a Gerbil
-    *
-    * @param Position
-    *
-    * @return an Gerbil
-    */
-
-
-    Gerbil(const Vec2d& position,const Vec2d& direction) ; // BABY no mum not ready
-    Gerbil(const Vec2d& ,const Vec2d&, OrganicEntity* ) ; // BABY and MUM
-    /*!
-    * @brief create a Baby Gerbil
-    *
-    * @param Position
-    * @param direction mum
-    * @param pointer on mum
-    *
-    * @return an Baby Gerbil
-    */
-
-
+    /**
+     * @brief Checks if this entity is a Gerbil
+     * 
+     * @return true, as this is a Gerbil
+     */
     bool isGerbil() const override
     {
         return true;
     }
-    bool isScorpion( ) const override
+    
+    /**
+     * @brief Checks if this entity is a Scorpion
+     * 
+     * @return false, as this is not a Scorpion
+     */
+    bool isScorpion() const override
     {
         return false;
     }
-    bool isFood( ) const override
+    
+    /**
+     * @brief Checks if this entity is Food
+     * 
+     * @return false, as this is not Food
+     */
+    bool isFood() const override
     {
         return false;
     }
 
-    // getters:
+    // Perception and movement characteristics
+    /**
+     * @brief Gets the viewing angle range for this gerbil
+     * 
+     * @return View range in radians
+     */
     virtual const double& getViewRange() const override;
-    virtual const double& getViewDistance()const override;
+    
+    /**
+     * @brief Gets the maximum viewing distance for this gerbil
+     * 
+     * @return View distance
+     */
+    virtual const double& getViewDistance() const override;
+    
+    /**
+     * @brief Gets the radius used for random walk behavior
+     * 
+     * @return Random walk radius
+     */
     virtual const double& getRandomWalkRadius() const override;
-    virtual const  double& getRandomWalkDistance() const override;
+    
+    /**
+     * @brief Gets the distance parameter used for random walk behavior
+     * 
+     * @return Random walk distance
+     */
+    virtual const double& getRandomWalkDistance() const override;
+    
+    /**
+     * @brief Gets the maximum speed this gerbil can reach
+     * 
+     * @return Maximum speed
+     */
     virtual const double& getStandardMaxSpeed() const override;
+    
+    /**
+     * @brief Gets the mass of this gerbil for force calculations
+     * 
+     * @return Mass value
+     */
     virtual const double& getMass() const override;
-    virtual const  double& getRandomWalkJitter() const override ;
+    
+    /**
+     * @brief Gets the jitter parameter used for random walk behavior
+     * 
+     * @return Random walk jitter value
+     */
+    virtual const double& getRandomWalkJitter() const override;
 
-    bool eatableBy(Gerbil const* gerbil) const override ;
-    bool eatableBy(Food const* food) const  override ;
-    bool eatableBy(Scorpion const* scorpion) const   override ;
-    bool eatable(OrganicEntity const* entity) const  override ;
+    // Interaction with other entities
+    /**
+     * @brief Determines if this gerbil can be eaten by another gerbil
+     * 
+     * @param gerbil The potential predator
+     * @return true if eatable, false otherwise
+     */
+    bool eatableBy(Gerbil const* gerbil) const override;
+    
+    /**
+     * @brief Determines if this gerbil can be eaten by food
+     * 
+     * @param food The potential predator
+     * @return true if eatable, false otherwise
+     */
+    bool eatableBy(Food const* food) const override;
+    
+    /**
+     * @brief Determines if this gerbil can be eaten by a scorpion
+     * 
+     * @param scorpion The potential predator
+     * @return true if eatable, false otherwise
+     */
+    bool eatableBy(Scorpion const* scorpion) const override;
+    
+    /**
+     * @brief Determines if an entity can be eaten by this gerbil
+     * 
+     * @param entity The potential prey
+     * @return true if the entity is eatable, false otherwise
+     */
+    bool eatable(OrganicEntity const* entity) const override;
 
-    bool canMate(Gerbil const* gerbil ) const override;
-    bool canMate(Food const* food ) const override;
-    bool canMate(Scorpion const* scorpion)  const override;
-    bool matable(OrganicEntity const* organicentity ) const override;
+    // Reproduction behaviors
+    /**
+     * @brief Determines if this gerbil can mate with another gerbil
+     * 
+     * @param gerbil The potential mate
+     * @return true if mating is possible, false otherwise
+     */
+    bool canMate(Gerbil const* gerbil) const override;
+    
+    /**
+     * @brief Determines if this gerbil can mate with food
+     * 
+     * @param food The potential mate
+     * @return true if mating is possible, false otherwise
+     */
+    bool canMate(Food const* food) const override;
+    
+    /**
+     * @brief Determines if this gerbil can mate with a scorpion
+     * 
+     * @param scorpion The potential mate
+     * @return true if mating is possible, false otherwise
+     */
+    bool canMate(Scorpion const* scorpion) const override;
+    
+    /**
+     * @brief Determines if an entity can mate with this gerbil
+     * 
+     * @param entity The potential mate
+     * @return true if mating is possible, false otherwise
+     */
+    bool matable(OrganicEntity const* entity) const override;
 
-    void giveBirthThis()  override ;
-    virtual const sf::Texture& getTexture() const override; // getter pour annimal draw
+    /**
+     * @brief Handles the birth process for this gerbil
+     * 
+     * Creates new baby gerbils and adds them to the environment
+     */
+    void giveBirthThis() override;
+    
+    /**
+     * @brief Gets the appropriate texture for rendering this gerbil
+     * 
+     * @return The texture to use based on gender
+     */
+    virtual const sf::Texture& getTexture() const override;
 
+    /**
+     * @brief Destructor for Gerbil
+     */
     ~Gerbil() {}
-
 };
